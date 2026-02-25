@@ -1,6 +1,8 @@
 package com.cda.demo.service;
 
 import com.cda.demo.entity.Category;
+import com.cda.demo.exception.ResourceAlreadyExistsException;
+import com.cda.demo.exception.ResourceNotFoundException;
 import com.cda.demo.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,69 +14,46 @@ public class CategoryService extends AbstractService<Category> {
     private CategoryRepository categoryRepository;
 
     @Override
-    public Category findById(Integer id) throws Exception {
-        try {
-            Optional<Category> category = this.categoryRepository.findById(id);
-            if (category.isPresent()) {
-                return category.get();
-            }
-            throw new Exception("Category not found");
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+    public Category findById(Integer id) {
+        return this.categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Category.class));
+    }
+
+    @Override
+    public Iterable<Category> findAll() {
+        Iterable<Category> categories = this.categoryRepository.findAll();
+        if (!categories.iterator().hasNext()) {
+            throw new ResourceNotFoundException(Category.class);
+        }
+        return categories;
+    }
+
+    @Override
+    public void delete(Integer id) {
+        if (this.categoryRepository.existsById(id)) {
+            this.categoryRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException(Category.class);
         }
     }
 
     @Override
-    public Iterable<Category> findAll() throws Exception {
-        try {
-            Iterable<Category> categories = this.categoryRepository.findAll();
-            if (!categories.iterator().hasNext()) {
-                throw new Exception("No categories found");
-            }
-            return categories;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+    public Category create(Category entity) {
+        if (this.categoryRepository.findByName(entity.getName()).isPresent()) {
+            throw new ResourceAlreadyExistsException(Category.class);
         }
+        Category category = this.categoryRepository.save(entity);
+        return category;
     }
 
     @Override
-    public void delete(Integer id) throws Exception {
-        try {
-            if (this.categoryRepository.existsById(id)) {
-                this.categoryRepository.deleteById(id);
-            }
-            throw new Exception("Category not found");
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    @Override
-    public Category create(Category entity) throws Exception {
-        try {
+    public Category update(Category entity) {
+        if (this.categoryRepository.existsById(entity.getId())) {
             if (this.categoryRepository.findByName(entity.getName()).isPresent()) {
-                throw new Exception("Category already exists");
+                throw new ResourceAlreadyExistsException(Category.class);
             }
-            Category category = this.categoryRepository.save(entity);
-            return category;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return this.categoryRepository.save(entity);
         }
-    }
-
-    @Override
-    public Category update(Category entity) throws Exception {
-        try {
-            if (this.categoryRepository.existsById(entity.getId())) {
-                if (this.categoryRepository.findByName(entity.getName()).isPresent()) {
-                    throw new Exception("Category already exists");
-                }
-                return this.categoryRepository.save(entity);
-            }
-            throw new Exception("Category not found");
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        throw new ResourceNotFoundException(Category.class);
     }
 
     @Override

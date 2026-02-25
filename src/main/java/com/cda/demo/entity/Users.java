@@ -6,10 +6,7 @@ import lombok.*;
 @Entity
 @Table(name = "utilisateur")
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter @ToString
-public class Users implements AbstractEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Users extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String firstName;
     @Column(nullable = false, length = 50)

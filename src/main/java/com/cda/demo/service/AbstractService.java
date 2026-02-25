@@ -1,10 +1,10 @@
 package com.cda.demo.service;
 
-import com.cda.demo.entity.AbstractEntity;
+import com.cda.demo.entity.BaseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public abstract class AbstractService<T extends AbstractEntity> {
+public abstract class AbstractService<T extends BaseEntity> {
 
     public abstract T findById(Integer id) throws Exception;
     public abstract Iterable<T> findAll() throws Exception;
