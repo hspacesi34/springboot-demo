@@ -1,37 +1,43 @@
 package com.cda.demo.controller;
 
+import com.cda.demo.dto.CategoryCreateDto;
+import com.cda.demo.dto.CategoryReadDto;
+import com.cda.demo.dto.CategoryUpdateDto;
 import com.cda.demo.entity.Category;
 import com.cda.demo.service.CategoryService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
-public class CategoryController extends AbstractController<Category> {
-    private CategoryService categoryService;
+@RequiredArgsConstructor
+public class CategoryController extends AbstractController<CategoryCreateDto, CategoryUpdateDto, CategoryReadDto> {
+    private final CategoryService categoryService;
 
     @PostMapping("/category")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category create(@RequestBody Category category) throws URISyntaxException {
-        return this.categoryService.create(category);
+    public CategoryReadDto create(@RequestBody CategoryCreateDto categoryCreateDto) {
+        Category category = modelMapper.map(categoryCreateDto, Category.class);
+        Category categorySaved = this.categoryService.create(category);
+        return modelMapper.map(categorySaved, CategoryReadDto.class);
     }
     @GetMapping("/category/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Category findById(@PathVariable Integer id) {
-        return this.categoryService.findById(id);
+    public CategoryReadDto findById(@PathVariable Integer id) {
+        Category category = this.categoryService.findById(id);
+        return modelMapper.map(category, CategoryReadDto.class);
     }
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Category> findAll() {
-        return this.categoryService.findAll();
+    public List<CategoryReadDto> findAll() {
+        List<CategoryReadDto> categoryDtos = new ArrayList<>();
+        for (Category category : this.categoryService.findAll()) {
+            categoryDtos.add(modelMapper.map(category, CategoryReadDto.class));
+        }
+        return categoryDtos;
     }
     @DeleteMapping("/category/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -43,7 +49,9 @@ public class CategoryController extends AbstractController<Category> {
     }
     @PutMapping("/category")
     @ResponseStatus(HttpStatus.OK)
-    public Category update(@RequestBody Category category) {
-        return categoryService.update(category);
+    public CategoryReadDto update(@RequestBody CategoryUpdateDto categoryUpdateDto) {
+        Category category = modelMapper.map(categoryUpdateDto, Category.class);
+        Category categorySaved = this.categoryService.update(category);
+        return modelMapper.map(categorySaved, CategoryReadDto.class);
     }
 }

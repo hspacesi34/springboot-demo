@@ -1,6 +1,5 @@
 package com.cda.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,7 +8,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +26,9 @@ public class Game extends BaseEntity {
     @Column(nullable = false, name = "publish_at")
     @NotNull(message = "La date de publication est obligatoire")
     @PastOrPresent(message = "La date ne peut pas être dans le futur")
-    private LocalDate publishAt;
+    private Date publishAt;
     @ManyToOne
     @JoinColumn(name = "manufacturer_id")
-    @JsonIgnoreProperties("games")
     @NotNull(message = "Doit possèder un manufacturer")
     private Manufacturer manufacturer;
     @ManyToMany

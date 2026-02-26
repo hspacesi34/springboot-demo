@@ -1,6 +1,5 @@
 package com.cda.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -17,6 +16,5 @@ public class Manufacturer extends BaseEntity {
     @Length(min = 3, max = 50)
     private String name;
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.REMOVE)
-    @JsonIgnoreProperties("manufacturer")
     private List<Game> games = new ArrayList<>();
 }

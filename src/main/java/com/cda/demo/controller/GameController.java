@@ -1,38 +1,46 @@
 package com.cda.demo.controller;
 
+import com.cda.demo.dto.GameCreateDto;
+import com.cda.demo.dto.GameReadDto;
+import com.cda.demo.dto.GameUpdateDto;
 import com.cda.demo.entity.Game;
-import com.cda.demo.entity.Manufacturer;
 import com.cda.demo.service.GameService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
-public class GameController {
-    private GameService gameService;
+@RequiredArgsConstructor
+public class GameController extends AbstractController<GameCreateDto, GameUpdateDto, GameReadDto> {
+    private final GameService gameService;
 
     @PostMapping("/game")
     @ResponseStatus(HttpStatus.CREATED)
-    public Game create(@RequestBody Game game) throws URISyntaxException {
-        return this.gameService.create(game);
+    public GameReadDto create(@RequestBody GameCreateDto gameCreateDto) {
+        Game game = modelMapper.map(gameCreateDto, Game.class);
+        Game gameSaved = gameService.create(game);
+        return modelMapper.map(gameSaved, GameReadDto.class);
     }
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Game findById(@PathVariable Integer id) {
-        return this.gameService.findById(id);
+    public GameReadDto findById(@PathVariable Integer id) {
+        Game game = gameService.findById(id);
+        return modelMapper.map(game, GameReadDto.class);
     }
     @GetMapping("/games")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Game> findAll() {
-        return this.gameService.findAll();
+    public List<GameReadDto> findAll() {
+        List<GameReadDto> gameDtos = new ArrayList<>();
+        for (Game game : this.gameService.findAll()) {
+            gameDtos.add(modelMapper.map(game, GameReadDto.class));
+        }
+        return gameDtos;
     }
     @DeleteMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -44,7 +52,9 @@ public class GameController {
     }
     @PutMapping("/game")
     @ResponseStatus(HttpStatus.OK)
-    public Game update(@RequestBody Game game) {
-        return gameService.update(game);
+    public GameReadDto update(@RequestBody GameUpdateDto gameUpdateDto) {
+        Game game = modelMapper.map(gameUpdateDto, Game.class);
+        Game gameSaved = gameService.update(game);
+        return modelMapper.map(gameSaved, GameReadDto.class);
     }
 }
