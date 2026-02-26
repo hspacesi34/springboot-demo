@@ -1,5 +1,6 @@
 package com.cda.demo.dto;
 
+import com.cda.demo.entity.Users;
 import lombok.*;
 
 import java.sql.Date;

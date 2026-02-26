@@ -14,7 +14,10 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter @ToString
-public class Game extends BaseEntity {
+public class Game {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @Column(length =  50, nullable = false)
     @NotBlank
     @Length(min = 2, max = 50)
@@ -35,4 +38,7 @@ public class Game extends BaseEntity {
     @JoinTable(name = "game_category", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     @NotEmpty(message = "Doit avoir au moins une catégorie")
     private List<Category> categories = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users users;
 }

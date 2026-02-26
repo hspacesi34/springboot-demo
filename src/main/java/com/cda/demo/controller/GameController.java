@@ -27,12 +27,14 @@ public class GameController extends AbstractController<GameCreateDto, GameUpdate
         Game gameSaved = gameService.create(game);
         return modelMapper.map(gameSaved, GameReadDto.class);
     }
+
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GameReadDto findById(@PathVariable Integer id) {
         Game game = gameService.findById(id);
         return modelMapper.map(game, GameReadDto.class);
     }
+
     @GetMapping("/games")
     @ResponseStatus(HttpStatus.OK)
     public List<GameReadDto> findAll() {
@@ -42,6 +44,7 @@ public class GameController extends AbstractController<GameCreateDto, GameUpdate
         }
         return gameDtos;
     }
+
     @DeleteMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, String> delete(@PathVariable Integer id) {
@@ -50,6 +53,7 @@ public class GameController extends AbstractController<GameCreateDto, GameUpdate
         map.put("message","Game deleted");
         return map;
     }
+
     @PutMapping("/game")
     @ResponseStatus(HttpStatus.OK)
     public GameReadDto update(@RequestBody GameUpdateDto gameUpdateDto) {

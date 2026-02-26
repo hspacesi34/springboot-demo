@@ -26,12 +26,14 @@ public class ManufacturerController extends AbstractController<ManufacturerCreat
         ManufacturerReadDto manufacturerReadDto = modelMapper.map(manufacturerCreated, ManufacturerReadDto.class);
         return manufacturerReadDto;
     }
+
     @GetMapping("/manufacturer/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ManufacturerReadDto findById(@PathVariable Integer id) {
         Manufacturer manufacturer = manufacturerService.findById(id);
         return modelMapper.map(manufacturer, ManufacturerReadDto.class);
     }
+
     @GetMapping("/manufacturers")
     @ResponseStatus(HttpStatus.OK)
     public List<ManufacturerReadDto> findAll() {
@@ -41,6 +43,7 @@ public class ManufacturerController extends AbstractController<ManufacturerCreat
         }
         return manufacturerReadDtos;
     }
+
     @DeleteMapping("/manufacturer/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, String> delete(@PathVariable Integer id) {
@@ -49,6 +52,7 @@ public class ManufacturerController extends AbstractController<ManufacturerCreat
         map.put("message","Manufacturer deleted");
         return map;
     }
+
     @PutMapping("/manufacturer")
     @ResponseStatus(HttpStatus.OK)
     public ManufacturerReadDto update(@RequestBody ManufacturerUpdateDto manufacturerUpdateDto) {

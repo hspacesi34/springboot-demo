@@ -47,10 +47,4 @@ public class GameService extends AbstractService<Game> {
         }
         throw new ResourceNotFoundException(Game.class);
     }
-
-    @Override
-    public boolean exists(Integer id) {
-        boolean exists = this.gameRepository.existsById(id);
-        return exists;
-    }
 }

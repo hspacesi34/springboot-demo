@@ -56,11 +56,4 @@ public class ManufacturerService extends AbstractService<Manufacturer> {
         }
         throw new ResourceNotFoundException(Manufacturer.class);
     }
-
-    @Override
-    public boolean exists(Integer id) {
-        boolean exists = this.manufacturerRepository.existsById(id);
-        return exists;
-    }
-
 }

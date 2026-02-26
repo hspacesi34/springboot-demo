@@ -6,4 +6,5 @@ import lombok.*;
 public class ManufacturerUpdateDto {
     private Integer id;
     private String name;
+    private String console;
 }

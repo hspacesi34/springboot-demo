@@ -55,14 +55,4 @@ public class CategoryService extends AbstractService<Category> {
         }
         throw new ResourceNotFoundException(Category.class);
     }
-
-    @Override
-    public boolean exists(Integer id) throws Exception {
-        try {
-            boolean exists = this.categoryRepository.existsById(id);
-            return exists;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
 }

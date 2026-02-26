@@ -24,12 +24,14 @@ public class CategoryController extends AbstractController<CategoryCreateDto, Ca
         Category categorySaved = this.categoryService.create(category);
         return modelMapper.map(categorySaved, CategoryReadDto.class);
     }
+
     @GetMapping("/category/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CategoryReadDto findById(@PathVariable Integer id) {
         Category category = this.categoryService.findById(id);
         return modelMapper.map(category, CategoryReadDto.class);
     }
+
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
     public List<CategoryReadDto> findAll() {
@@ -39,6 +41,7 @@ public class CategoryController extends AbstractController<CategoryCreateDto, Ca
         }
         return categoryDtos;
     }
+
     @DeleteMapping("/category/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, String> delete(@PathVariable Integer id) {
@@ -47,6 +50,7 @@ public class CategoryController extends AbstractController<CategoryCreateDto, Ca
         map.put("message","Category deleted");
         return map;
     }
+
     @PutMapping("/category")
     @ResponseStatus(HttpStatus.OK)
     public CategoryReadDto update(@RequestBody CategoryUpdateDto categoryUpdateDto) {

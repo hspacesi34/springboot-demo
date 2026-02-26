@@ -3,6 +3,7 @@ package com.cda.demo.exception;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -50,6 +51,25 @@ public class GlobalExceptionHandler {
             messages.put(attributName, attribut);
         }
 
+        response.put("violations", messages);
+        return response;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleMethodArgumentException(MethodArgumentNotValidException ex) {
+        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> messages = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach((violation) -> {
+
+            String attributName = violation.getField();
+            String message = violation.getDefaultMessage();
+
+            ArrayList<String> attribut = (ArrayList<String>) messages.getOrDefault(attributName, new ArrayList<String>());
+            attribut.add(message);
+
+            messages.put(attributName, attribut);
+        });
         response.put("violations", messages);
         return response;
     }
